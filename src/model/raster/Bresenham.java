@@ -10,10 +10,22 @@ package model.raster;
  */
 public class Bresenham extends Liner{
     
+    /**
+     * Constructor that calls the constructor of the father
+     * @param raster 
+     */
      public Bresenham (Raster raster){
         super(raster);
     }
 
+     /**
+      * Method to draw the line with Bresenham method, that consists in calculate
+      * the increase of each coordinate, and then look for the next pixel
+     * @param x1 coordinate x for first point
+     * @param y1 coordinate y for first point
+     * @param x2 coordinate x for second point
+     * @param y2 coordinate y for second point
+      */
     @Override
     protected void rasterized(int x1, int y1, int x2, int y2) {
         //calculo de las diferencias
@@ -22,47 +34,45 @@ public class Bresenham extends Liner{
         
         int y = y1;
         int x = x1;
-        
-        
+
         if(dx >= dy){
-        //siempre aumenta x
+        //always increase the coordinate x
             int P = 2*dy -dx;
             for(int i=0; i <=dx; i++){
-            raster.setPixel((int)x, (int)y, color); //pintamos 
+            raster.setPixel((int)x, (int)y, color); 
             if(P>=0){
-                //ver si sube o baja
-                if(y1 < y2) //sube
+                //see if it goes up or down
+                if(y1 < y2) //up
                     y++;
-                else  //baja
+                else  //down
                     y--;
-                P = P + 2*dy - 2*dx; // el pixel esta para arriba
+                P = P + 2*dy - 2*dx; // pixel is up
             }else{
-                P = P + 2*dy;
-            }//avance de la x vemos a q direccion va y lo sumamos
-                if(x1 < x2) //sube
+                P = P + 2*dy; //pixel is down
+            }//see the direction of the coordinate x
+                if(x1 < x2) //up
                     x++;
-                else  //baja
+                else  //down
                     x--;
             }
         }else{
-            //siempre aumenta y
+            //always increase the coordinate y
             int P = 2*dx -dy;
             for(int i=0; i <=dy; i++){
-            raster.setPixel((int)x, (int)y, color); //pintamos 
+            raster.setPixel((int)x, (int)y, color);  
             if(P>=0){
-                //ver si sube o baja
-                if(x1 < x2) //sube
+                //see if it goes up or down
+                if(x1 < x2) //up
                     x++;
-                else  //baja
+                else  //down
                     x--;
-                P = P + 2*dx - 2*dy; // el pixel esta para arriba
+                P = P + 2*dx - 2*dy; //pixel is up
             }else{
-                P = P + 2*dx; // el pixel esta hacia abajo
-            }//avance de la y
-                //ver si sube o baja
-                if(y1 < y2) //sube
+                P = P + 2*dx; //pixel is down
+            }///see the direction of the coordinate y
+                if(y1 < y2) //up
                     y++;
-                else  //baja
+                else  //down
                     y--;     
         }
         }

@@ -4,29 +4,56 @@
  */
 package ej2;
 import control.Controller;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.SwingUtilities;
 import view.Window;//la nuestra
-import model.objects.*;
 
 /**
  *
  * @author lgome
  */
-public class Ej2 {
-
+public class Ej2 {    
     /**
-     * @param args the command line arguments
+     * Main that creates a new run for creating a new window, that is used
+     * in the controller, that manages all the actions, also there is a method
+     * that if the button bChangeS, the one for changing the size, is pressed
+     * the window and the panel must change, with the dimension that are created
+     * before
+     * @param args 
      */
     public static void main(String[] args) {
         
-        //clase anonima, es decir estamos generando una clase como los métodos lamba pero aqui se pueden crear instancias
         SwingUtilities.invokeLater(new Runnable(){ 
-        @Override //metodo de la clase runnable
+        @Override 
         public void run(){
-            Window window = new Window(); // crea la ventana
-            window.setVisible(true); // la pone visible
+            Window window = new Window(); 
+            window.setVisible(true); 
             
-            new Controller(window.getPanel(), window); //crea el controlador y como el parametro es el panel le pasa eso
+            Controller c = new Controller(window.getPanel(), window); 
+            
+            final int[] wChange = {600, 1000, 800};
+            final int[] hChange = {400, 800, 600};
+            final int[] index = {0};
+        
+            window.getBChangeS().addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                    int i = index[0];
+                    
+                    window.getPanel().newSize(wChange[i], hChange[i]);
+                    window.setSize(wChange[i], hChange[i]);
+                    
+                    index[0] = (index[0] + 1) % wChange.length;
+
+                    window.revalidate();
+                    window.repaint();
+                    IO.println("SIZE CHANGED");
+                    c.changeMode(window, window.getPanel());
+            }
+        }
+        );
+
         }
     });
             

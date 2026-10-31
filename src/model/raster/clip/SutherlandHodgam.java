@@ -13,56 +13,54 @@ import model.objects.Polygon;
  *
  * @author lgome
  */
-//Esto es para con un polígono definir el área q quieres ver y así crear otro polígono
 public class SutherlandHodgam {
-    //IN
-    //originalPolygon - polygon you can clip
-    //clippingPolygon - must be convex
-
-
-    //OUT
-    //newPolygon
-    //SE TIENE Q BORRAR EL OTRO POLÍGONO DICE Q LO TENGAMOS EN EL CONTROLLER UNA LISTA CON LOS POLÍGONOS EXISTENTES Y QUITARLO CUANDO SE HAGA EL CLIPPING
-  
-public Polygon clip(Polygon originalPolygon, Polygon clippingPolygon) {    
-    List<Line> clippingPolygonEdges = clippingPolygon.toEdges(); 
-    Polygon currentPolygon = originalPolygon;
     
-    for (Line clipLine : clippingPolygonEdges) { 
-        List<Line> currentEdges = currentPolygon.toEdges();
-        Polygon newPolygon = new Polygon();
+    /**
+     * Method for clipping the polygons given, it calculate if each point of the 
+     * original polygon is not inside the clipping polygon, and calculate
+     * the intersections between then to draw the new polygon 
+     * @param originalPolygon is the original polygon that will be clip
+     * @param clippingPolygon is the polygon that defines the boundaries 
+     * @return polygon that has been clipped
+     */
+    public Polygon clip(Polygon originalPolygon, Polygon clippingPolygon) {    
+        List<Line> clippingPolygonEdges = clippingPolygon.toEdges(); 
+        Polygon currentPolygon = originalPolygon;
+    
+        for (Line clipLine : clippingPolygonEdges) { 
+            List<Line> currentEdges = currentPolygon.toEdges();
+            Polygon newPolygon = new Polygon();
         
-        for (Line line : currentEdges) { 
-            Point startEndPoint = line.getPointA();
-            Point lastEndPoint = line.getPointB(); 
+            for (Line line : currentEdges) { 
+                Point startEndPoint = line.getPointA();
+                Point lastEndPoint = line.getPointB(); 
             
-            boolean insideStart = clipLine.isInside(startEndPoint); 
-            boolean insideLast = clipLine.isInside(lastEndPoint); 
+                boolean insideStart = clipLine.isInside(startEndPoint); 
+                boolean insideLast = clipLine.isInside(lastEndPoint); 
             
-            if (insideStart && insideLast) { 
-                newPolygon.add(startEndPoint);
-                newPolygon.add(lastEndPoint); 
-                
-            } else if (insideStart && !insideLast) { 
-                newPolygon.add(startEndPoint);
-                //intersection 
-                Point inter = clipLine.calculateIntersection(startEndPoint, lastEndPoint);
-                if(inter != null){
-                    newPolygon.add(inter);
-                }
-            } else if (!insideStart && insideLast) { 
-                //intersection 
-                Point inter = clipLine.calculateIntersection(startEndPoint, lastEndPoint);
-                if(inter != null){
-                    newPolygon.add(inter);
+                if (insideStart && insideLast) { 
+                    newPolygon.add(startEndPoint);
+                    newPolygon.add(lastEndPoint);
+                } else if (insideStart && !insideLast) { 
+                    newPolygon.add(startEndPoint);
+                    //intersection 
+                    Point inter = clipLine.calculateIntersection(startEndPoint, lastEndPoint);
+                    if(inter != null){
+                        newPolygon.add(inter);
+                    }
+                } else if (!insideStart && insideLast) { 
+                    //intersection 
+                    Point inter = clipLine.calculateIntersection(startEndPoint, lastEndPoint);
+                    if(inter != null){
+                        newPolygon.add(inter);
+                    } 
+                    newPolygon.add(lastEndPoint);
                 } 
-                newPolygon.add(lastEndPoint);
-            } 
-        }
-        currentPolygon = newPolygon; // Actualizamos para la siguiente arista de recorte
-    } 
-    return currentPolygon; 
-}
+            }
+            currentPolygon = newPolygon; // Actualizamos para la siguiente arista de recorte
+        } 
+        return currentPolygon; 
+    }
 
 
 }

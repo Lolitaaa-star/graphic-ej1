@@ -13,10 +13,13 @@ import java.awt.Graphics;
  */
 public class GraphicLiner extends Liner{
     
+    /**
+     * Constructor that calls the constructor of the father class
+     * @param raster the raster 
+     */
     public GraphicLiner(Raster raster){
         super(raster);
     }
-
     
     @Override
     protected void rasterized(int x1, int y1, int x2, int y2) {

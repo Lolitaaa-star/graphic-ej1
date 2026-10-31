@@ -9,50 +9,44 @@ package model.objects;
  * @author lgome
  */
 
-//record es otra clase "mejor q la normal"
 public record Point(int x, int y){
+    
+    /**
+     * Method to create a point with only a coordinate
+     * @param x the new coordinate
+     * @return the new point
+     */
     public Point withX(int x){
         return new Point(x, this.y);
     }
     
-    //hacer withY, withXY
+    /**
+     * Method to create a point with only a coordinate
+     * @param y the new coordinate
+     * @return the new point
+     */
     public Point withY(int y){
         return new Point(this.x, y);
     }
     
+    /**
+     * Methos to create a point with both coordinates
+     * @param x coordinate of the x-coor
+     * @param y coordinate of the y-coor
+     * @return the new point
+     */
     public Point withXY(int x, int y){
         return new Point(x, y);
     }
     
-    //implementar
+    /**
+     * Method to calculate the distance between to coordinates
+     * @param x coordinate x
+     * @param y coordinate y
+     * @return the distance 
+     */
     public int distanceTo(int x, int y){
         return y - x;
     }
 }
 
-
-/*
-public class Point {
-    private int x, y; //podria ser double pero por ahora usamos int
-    
-    public Point(int x, int y){
-        this.x = x;
-        this.y = y;
-    }
-    
-    public int getX(){
-        return x;
-    }
-    
-    public int getY(){
-        return y;
-    }
-    
-    public void setX(int x){
-        this.x = x;
-    }
-    
-    public void setY(int y){
-        this.y = y;
-    }
-}*/

@@ -8,11 +8,10 @@ import java.awt.image.BufferedImage;
  *
  * @author lgome
  */
-//la cuadricula binaria implementa la interfaz 
 public class RasterBI implements Raster {
     
     private final BufferedImage image;
-    private int clearColor; //el color del fondo q se crea
+    private int clearColor; 
     
     //poner el color q quieres y crea la imagen 
     public RasterBI(int w, int h){
@@ -30,7 +29,6 @@ public class RasterBI implements Raster {
         }
     }
 
-    
     @Override
     public BufferedImage getImage(){
         return image;
@@ -68,6 +66,7 @@ public class RasterBI implements Raster {
         clearColor = color;
     }
     
+    @Override
     public int getClearColor(){
         return clearColor;
     }

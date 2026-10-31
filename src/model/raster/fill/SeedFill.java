@@ -12,6 +12,16 @@ import model.raster.RasterBI;
  */
 public class SeedFill {
 
+    /**
+     * Method for filling the area that is selected if the condition that the 
+     * clear color of the panel and the one for the pixel are the same, that means
+     * that nothing has been fill in that pixel
+     * @param img is the panel where we are working
+     * @param x coordinate x
+     * @param y coordinate y
+     * @param fillColor color for filling the polygon
+     * 
+    */
     public void fill(RasterBI img, int x, int y, int fillColor) {
 
         int seed = img.getPixel(x, y);

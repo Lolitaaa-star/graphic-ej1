@@ -10,6 +10,7 @@ import model.raster.*;
 import view.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 import model.raster.clip.SutherlandHodgam;
 import model.raster.fill.ScanLineFill;
 import model.raster.fill.SeedFill;
@@ -27,12 +28,18 @@ public class Controller {
     private int x1, y1, x2, y2;
     private BufferedImage copia;
     private boolean dibujando, modeLine=true, modePolyg=false, painted=false; 
+    private int[] colors = {0x000000, 0xff0000, 0x00ff00, 0x0000ff, 0x1616133};
+    private int[] index = {0};
     
+    /**
+     * Constructor to create the controller, also manages if there is a change
+     * because a button has beeen clicked, in that case the method changeMode is
+     * called
+     * @param panel
+     * @param window 
+     */
     public Controller(Panel panel, Window window){
         panel.getRaster().clear();
-                
-        //select the mode, if any pressed is Line
-        Panel winPanel = window.getPanel();
         
         window.getBLine().addActionListener(new ActionListener(){
             @Override
@@ -56,13 +63,31 @@ public class Controller {
         }
         );
         
+        window.getBChange().addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                panel.getRaster().setClearColor(colors[index[0]]);
+                index[0] = (index[0]+1)%colors.length;
+                panel.getRaster().clear();
+                changeMode(window, panel);
+                IO.println("CHANGE COLOR");  
+            }
+        }
+        );
+        
         changeMode(window, panel);
         
         }
     
+    /**
+     * Method to draw lines, it creates initial lines, and also manages if
+     * the mouse is clicked or moved, to draw the provisional line and the 
+     * final one that the user wants
+     * @param panel 
+     */
     public void drawLine(Panel panel){
         final boolean shiftPress[] = {false};
-            
+        clear(panel);
             panel.addMouseListener(new MouseAdapter(){
                 @Override
                 public void mousePressed(MouseEvent e){
@@ -194,14 +219,41 @@ public class Controller {
         liner.drawLine(l8);
     }
     
+    /**
+     * Method to repaint all the polygons that were in the panel, used when is 
+     * been drawn another polygon, that needs to clean the provisional polygon
+     * @param panel 
+     */
+    public void repaint(Panel panel){
+        for(int i=0; i<actualP.size(); i++){
+            polygonR.rasterize(actualP.get(i));
+            if(actualP.get(i) == poly2){
+                ScanLineFill f = new ScanLineFill(poly2);
+                f.fill((RasterBI)panel.getRaster(), 0XFFFF00, 0xFFFFFF); 
+            }
+            if(actualP.get(i).isFill()){
+                int c = actualP.get(i).getColor();
+                ScanLineFill f = new ScanLineFill(actualP.get(i));
+                f.fill((RasterBI)panel.getRaster(), c, 0xFFFFFF);
+            }
+                
+        }
+    }
+    
+    /**
+     * Method to draw the initial polygons and also to call all the methods
+     * that make sure to change is some key is pressed
+     * @param panel 
+     */
     public void drawPolyg(Panel panel){
         //to check in evey step
         clear(panel);
         fillP(panel);
         clippingP(panel);
+        repaint(panel);
         
         poly3 = methodDraw(panel);
-        
+
         if(!painted){
             poly1 = new Polygon();
             
@@ -231,6 +283,13 @@ public class Controller {
         }
     }
     
+    /**
+     * Method to check if there must be a change in the window, because some mode
+     * is active, so it eliminates all that was before, creates the necesary
+     * instances and calls there methods 
+     * @param window the one that is going to be modificated
+     * @param panel the one that is going to be modificated
+     */
     public void changeMode(Window window, Panel panel){
         
         if(modeLine){
@@ -263,9 +322,26 @@ public class Controller {
         }
     }
     
+    /**
+     * Method that fills the polygon, that has been selected, with the mode of
+     * fill that is when you press the f key, and to go out that is with the key 
+     * E and eliminates all the methods of before. Also the key A changes the color.
+     * When is filled is searched wich polygon is and edit his values
+     * @param panel the one is going to be modificated 
+     */
     public void fillP(Panel panel){
         panel.setFocusable(true);
         panel.requestFocusInWindow();
+        int[] colors = {0x000000, 0xff0000, 0x00ff00, 0x0000ff, 0xFFFF00};
+        int index[] = {0};
+        panel.addKeyListener(new KeyAdapter(){
+        @Override
+        public void keyPressed(KeyEvent e){
+            if(e.getKeyCode() == KeyEvent.VK_A){
+                index[0] = (index[0]+1) % colors.length;
+                IO.println("FILL COLOR CHANGE");
+            }
+        }});
         
         panel.addKeyListener(new KeyAdapter(){
         @Override
@@ -283,8 +359,20 @@ public class Controller {
                     int y = e.getY();
                 
                     SeedFill seed = new SeedFill();
-                    seed.fill((RasterBI)panel.getRaster(), x, y, 0xFFFF00);
-                        
+                    seed.fill((RasterBI)panel.getRaster(), x, y, colors[index[0]]);
+                    Point a = new Point(x,y);
+                    for(int i=0; i<actualP.size(); i++){
+                        List<Line> edges = actualP.get(i).toEdges();
+                        boolean isP = true;
+                        for(int j=0; j<edges.size(); j++){
+                            if(!edges.get(j).isInside(a)){
+                                isP=false;
+                            }
+                        }
+                        if(isP)
+                            actualP.get(i).isFill(colors[index[0]]);
+                    }
+                    index[0] = (index[0]+1) % colors.length;
                     }
                 });
                 }
@@ -305,6 +393,12 @@ public class Controller {
         });
     }
 
+    /**
+     * Method that has all the override methods for drawing a polygon with 
+     * clicking the mouse 
+     * @param panel the one is going to be modificated
+     * @return the polygon that has been drawn
+     */
     public Polygon methodDraw(Panel panel){
             panel.addMouseListener(new MouseAdapter(){
             @Override
@@ -330,6 +424,7 @@ public class Controller {
                     Graphics g = copia.getGraphics();
                     g.drawImage(original, 0, 0, null);
                     g.dispose();
+                    repaint(panel);
                 }else{
                     //coge el segundo punto y dibuja la línea ofical
                     x2 = e.getX();
@@ -356,9 +451,9 @@ public class Controller {
                     g.drawImage(original, 0, 0, null);
                     g.dispose();
                     
-                    // Ahora el último punto pasa a ser el nuevo inicio
                     x1 = x2;
                     y1 = y2;
+                    repaint(panel);
                     panel.repaint();
                 }
             }
@@ -389,6 +484,7 @@ public class Controller {
                 //posible poligono
                 polygonR.rasterize(poly4);
                 //lo borra por si te vuelves a mover
+                repaint(panel);
                 panel.repaint();
                 }
             }
@@ -412,12 +508,20 @@ public class Controller {
                    panel.repaint();
                    
                    actualP.add(poly3);
+                   repaint(panel);
                 }
             }
         });
         return poly3;
     }
     
+    /**
+     * Method to clip to polygons, the last to ones drawn in the panel and after 
+     * calling the method for clipping, and then are eliminated both polygons 
+     * used for the clipping and is added the new polygon, the one as a result 
+     * of the clipping
+     * @param panel 
+     */
     public void clippingP(Panel panel){
         panel.setFocusable(true);
         panel.requestFocusInWindow();
@@ -434,7 +538,6 @@ public class Controller {
                 Polygon clipping=null, originalP=null;
                 originalP=actualP.get(actualP.size()-2);
                 clipping=actualP.getLast();
-                
          
                 SutherlandHodgam methodP = new SutherlandHodgam();
                 Polygon newP = methodP.clip(originalP, clipping);
@@ -447,7 +550,6 @@ public class Controller {
                 actualP = aux;
                 panel.getRaster().clear();
                 for(int i=0; i<actualP.size(); i++){
-                        
                             polygonR.rasterize(actualP.get(i));
                     }
 
@@ -457,7 +559,11 @@ public class Controller {
         });
         
     }
-
+    
+    /**
+     * Method that when the c key is pressed the panel is cleaned
+     * @param panel 
+     */
     private void clear(Panel panel){
         panel.setFocusable(true);
         panel.requestFocusInWindow();

@@ -8,20 +8,27 @@ package model.raster;
  *
  * @author lgome
  */
-//metodo naive para sacar la linea
 public class NaiveLiner extends Liner{
     
     public NaiveLiner(Raster raster){
         super(raster);
     }
     
+    /**
+     * Method for rasterize with the NaiveLiner method, that consists in with 
+     * the function y = k*x + q for each segment we create the line
+     * @param x1 coordinate x for first point
+     * @param y1 coordinate y for first point
+     * @param x2 coordinate x for second point
+     * @param y2 coordinate y for second point
+     */
     @Override
     protected void rasterized(int x1, int y1, int x2, int y2) {
         // k - slope
         int dy = (y2-y1);
         int dx = (x2-x1);
 
-        // make sure dx is not 0 if dx == 0 y = x las lineas vecticales
+        // make sure dx is not 0 if dx == 0 y = x verticals
         if( dx == 0 ){
             if(y1<=y2){
                 for(int y = y1; y <= y2; y++){ 
@@ -39,10 +46,7 @@ public class NaiveLiner extends Liner{
         
         // function  y = k*x + q
         //           y - (k * x) = q
-
-        // todo for all segments
         
-        //las horizontales
         double k =  (double) dy / dx ;
         double q = y1 - (k * x1);
 
