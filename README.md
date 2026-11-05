@@ -2,12 +2,13 @@ This proyect creates Lines Segments and Polygons, each of them are defined in di
 having a button for each other to have there diferent method, and they do not colapse.
 
 LINE SEGMENTS
-Defined by points, the line segments are rasterize with the DDA algorithm, 
+Defined by to points, the start and the end point, the line segments are rasterize with the DDA algorithm,that override the method of his father, the Liner class, that is abstract. There are also implemented the Naive Liner and the Bresenham algorithm, but the are not used. Also the class Line has method to see if the line is horizontal, to orientate the line, to test if a point is inside or not, and to calculate the intersection between two lines.
+The lines, as the polygons, are rasterized so they can be seen in the panel, and also they can be drawn interactively, for the lines when the mode line is activated, is the first thing you see but if you change to polygon you can come back, when clicking the button for the first time is defined the first point, for the second you should move the line, se the posible lines, and then click for the second point. Also if you press shift before clicking for the second point you will create a new line, that can be, horizontal, vertical or diagonal, depending in which of this posible lines is more proximated
 
 POLYGONS
+A polygon is defined by a list of points, that when is rasterized is drawn the line between each of them, conecting the final point to the first one, having another method for when the polygon is not finally defined, which means that as the line, when drawning in the panel, by cliking selecting the points, until you press the key "Enter" it will not be totally defined, so it must be drawn without closing it. The polygon can be painted (fill mode press key F, out of the mode press key E), with SeedFIll or ScanLine, the first ones calls recursively to the 4 neigbours to set the pixel to a color if that pixel is the same color as the cleaning one, and for the second, for the y min to the y max of the polygon is painted the line formed by the odd intersections with the polygon and the coordinate y. The color that will fill the polygon can be changed by pressing the key A. Also the polygon can be clipped (clipping mode press key N), which needs the lines orientated(clockwise, anticlockwise) and the clipping polygon convex, so for each line of it is calculate if each line of the polygon is totaly inside, totaly outside or it has and intersection. 
 
-BUTTONS FOR CHANGE COLOR AND CHANGE SIZE
+BUTTONS FOR CHANGE COLOR AND CHANGE SIZE AND CLEAN PANEL
+To clean the panel you must press the key c, it calls the method clear of the raster and eliminates all the polygons that where saved in the list actualP, that cointaned all the polygons in the panel. To change the color or the size of the panel there is a button for each thing that changes them to one of the predifined values.
 
-DIFFERENT METHOD WITH KEYS
 
-NOT GOOD IMPLEMENTED
