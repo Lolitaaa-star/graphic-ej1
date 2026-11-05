@@ -64,6 +64,14 @@ public class Polygon {
     }
 
     /**
+     * Method to get the list of points of the polygon
+     * @return the variable polygon of the class
+     */
+    public List<Point> getPolygon(){
+        return polygon;
+    }
+    
+    /**
      * Method to get the size of the list of points
      * @return the size
      */
@@ -118,4 +126,27 @@ public class Polygon {
     public int getColor(){
         return fColor;
     }
+    
+    /**
+     * Method to get the orientation of the polygon in base of his area, if is positive
+     * it must be anticlockwise, otherwise must be clockwise, that is how it is created
+     * @return the polygon orientated
+     */
+    public Polygon orientate(){
+        double area = 0.0;
+        for(int i=0; i<polygon.size(); i++){
+            area += (polygon.get(i).x() * polygon.get(i).y()) - (polygon.get((i+1)%polygon.size()).x()*polygon.get((i+1)%polygon.size()).y());
+        }
+        area = area /2.0;
+        
+        if(area > 0){
+            Polygon orientate = new Polygon();
+            for(int i=0; i<polygon.size(); i++)
+                orientate.add(polygon.get(i));
+            return orientate;
+        }
+            
+        return this;
+    }
+    
 }

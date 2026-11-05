@@ -3,12 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej2/src/view/Window.java</file>
-            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej2/src/model/raster/PolygonRaster.java</file>
-            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej2/src/model/raster/Liner.java</file>
-            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej2/src/control/Controller.java</file>
-            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej2/src/model/objects/Polygon.java</file>
-            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej2/src/model/raster/fill/SeedFill.java</file>
+            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej1/src/model/objects/Line.java</file>
+            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej1/src/model/raster/Liner.java</file>
+            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej1/src/model/raster/GraphicLiner.java</file>
+            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej1/src/model/raster/DDA.java</file>
+            <file>file:/C:/Users/lgome/Documents/uni/computer%20graphics/Ej1/src/model/raster/clip/SutherlandHodgam.java</file>
         </group>
     </open-files>
 </project-private>

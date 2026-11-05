@@ -259,7 +259,7 @@ public class Controller {
             
             poly1.addMore(  new Point(50, 50),
                 new Point(250, 50),
-                new Point(150, 180));
+                new Point(50, 180));
             
             polygonR.rasterize(poly1);
 

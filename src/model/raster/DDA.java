@@ -9,6 +9,7 @@ package model.raster;
  *
  * @author lgome
  */
+//I AM USING THIS METHOD
 public class DDA extends Liner{ 
     
     public DDA(Raster raster){

@@ -24,14 +24,53 @@ public class SutherlandHodgam {
      * @return polygon that has been clipped
      */
     public Polygon clip(Polygon originalPolygon, Polygon clippingPolygon) {    
-        List<Line> clippingPolygonEdges = clippingPolygon.toEdges(); 
+        //guarantee that the clippingPolygon is convex
+        int nVer = clippingPolygon.size();
+        boolean sameS = true;
+        Point pA = clippingPolygon.get(0);
+        Point pB = clippingPolygon.get(1);
+        Point pC = clippingPolygon.get(2);
+            
+        double r = (((pB.x() - pA.x())*(pC.y() - pB.y())) - ((pB.y() - pA.y())*(pC.x() - pB.x())));
+        double sign = 0;
+        if(r<0)
+            sign = -1;
+        else
+            sign = 1;
+        for(int i=1; i<nVer; i++){
+            pA = clippingPolygon.get(i);
+            pB = clippingPolygon.get((i+1)%nVer);
+            pC = clippingPolygon.get((i+2)%nVer);
+            
+            double r1 = (((pB.x() - pA.x())*(pC.y() - pB.y())) - ((pB.y() - pA.y())*(pC.x() - pB.x())));
+            double sign1 = 0;
+            if(r1<0)
+                sign1=-1;
+            else
+                sign1=1;
+            
+            if(sign != sign1)   
+                sameS=false;   
+        }
+        
+        if(!sameS){
+            IO.println("NOT CONVEX CLIPPING POLYGON");
+            return new Polygon();
+        }
+        
+        Polygon clipOrientate = clippingPolygon.orientate();
+        //orientate
+        List<Line> clippingEdgesOriented = clipOrientate.toEdges();
+
         Polygon currentPolygon = originalPolygon;
     
-        for (Line clipLine : clippingPolygonEdges) { 
-            List<Line> currentEdges = currentPolygon.toEdges();
+        for (Line clipLine : clippingEdgesOriented) { 
+            Polygon currentOriented = currentPolygon.orientate();
+            List<Line> currentEdgesOriented = currentOriented.toEdges();
+
             Polygon newPolygon = new Polygon();
         
-            for (Line line : currentEdges) { 
+            for (Line line : currentEdgesOriented) { 
                 Point startEndPoint = line.getPointA();
                 Point lastEndPoint = line.getPointB(); 
             
@@ -59,6 +98,7 @@ public class SutherlandHodgam {
             }
             currentPolygon = newPolygon; // Actualizamos para la siguiente arista de recorte
         } 
+        //currentPolygon.add(new Point(1, 1));
         return currentPolygon; 
     }
 
